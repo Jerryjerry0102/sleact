@@ -7,7 +7,9 @@ import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
 const LogIn = () => {
-  const { data, error } = useSWR('http://localhost:3095/api/users', fetcher);
+  const { data, error, isValidating, mutate } = useSWR('http://localhost:3095/api/users', fetcher, {
+    dedupingInterval: 1000000,
+  });
   // fetcher함수에 이 주소를 어떻게 처리할지 적어준다.(주소가 fetcher함수의 매개변수로 넘어감)
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -18,11 +20,10 @@ const LogIn = () => {
       setLogInError(false);
       axios
         .post('http://localhost:3095/api/users/login', { email, password })
-        .then((response) => {
-          console.log(response);
+        .then(() => {
+          mutate();
         })
         .catch((error) => {
-          console.log(error.response);
           setLogInError(error.response.data);
         });
     },
