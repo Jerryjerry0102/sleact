@@ -1,10 +1,14 @@
 import useInput from '@hooks/useInput';
 import { Header, Form, Label, Input, Error, Button, LinkContainer } from '@pages/SignUp/styles';
+import fetcher from '@utils/fetcher';
 import axios from 'axios';
 import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
+import useSWR from 'swr';
 
 const LogIn = () => {
+  const { data, error } = useSWR('http://localhost:3095/api/users', fetcher);
+  // fetcher함수에 이 주소를 어떻게 처리할지 적어준다.(주소가 fetcher함수의 매개변수로 넘어감)
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [logInError, setLogInError] = useState(false);
