@@ -12,7 +12,7 @@ const Workspace: FC<P> = ({ children }) => {
   const { data, error, isValidating, mutate } = useSWR('http://localhost:3095/api/users', fetcher);
   const onLogout = useCallback(() => {
     axios.post('http://localhost:3095/api/users/logout', null).then(() => {
-      mutate();
+      mutate(false, false);
     });
   }, []);
 

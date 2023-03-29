@@ -18,8 +18,8 @@ const LogIn = () => {
       setLogInError(false);
       axios
         .post('http://localhost:3095/api/users/login', { email, password })
-        .then(() => {
-          mutate();
+        .then((response) => {
+          mutate(response.data, false);
         })
         .catch((error) => {
           setLogInError(error.response);
