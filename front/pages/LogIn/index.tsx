@@ -2,20 +2,18 @@ import useInput from '@hooks/useInput';
 import { Header, Form, Label, Input, Error, Button, LinkContainer } from '@pages/SignUp/styles';
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
-import React, { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { FormEvent, useCallback, useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 const LogIn = () => {
-  const { data, error, isValidating, mutate } = useSWR('http://localhost:3095/api/users', fetcher, {
-    dedupingInterval: 1000000,
-  });
+  const { data, error, isValidating, mutate } = useSWR('http://localhost:3095/api/users', fetcher);
   // fetcher함수에 이 주소를 어떻게 처리할지 적어준다.(주소가 fetcher함수의 매개변수로 넘어감)
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [logInError, setLogInError] = useState(false);
   const onSubmit = useCallback(
-    (e) => {
+    (e: FormEvent) => {
       e.preventDefault();
       setLogInError(false);
       axios
@@ -24,11 +22,21 @@ const LogIn = () => {
           mutate();
         })
         .catch((error) => {
-          setLogInError(error.response.data);
+          setLogInError(error.response);
         });
     },
     [email, password],
   );
+  console.log(data);
+
+  if (data === undefined) {
+    return <div>로딩중...</div>;
+  }
+
+  if (data) {
+    return <Navigate to="/workspace/channel" />;
+  }
+
   return (
     <div id="container">
       <Header>Sleact</Header>

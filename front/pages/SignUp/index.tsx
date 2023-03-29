@@ -1,10 +1,14 @@
 import useInput from '@hooks/useInput';
-import React, { useCallback, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import axios from 'axios';
 import { Form, Label, Input, LinkContainer, Button, Header, Error, Success } from './styles';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import useSWR from 'swr';
+import fetcher from '@utils/fetcher';
 
 const SignUp = () => {
+  const { data, error, isValidating, mutate } = useSWR('http://localhost:3095/api/users', fetcher);
+
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
   const [password, , setPassword] = useInput('');
@@ -14,7 +18,7 @@ const SignUp = () => {
   const [signUpSuccess, setSignUpSuccess] = useState(false);
 
   const onChangePassword = useCallback(
-    (e) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       setPassword(e.target.value);
       setMismatchError(e.target.value !== passwordCheck);
     },
@@ -22,7 +26,7 @@ const SignUp = () => {
   );
 
   const onChangePasswordCheck = useCallback(
-    (e) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       setPasswordCheck(e.target.value);
       setMismatchError(e.target.value !== password);
     },
@@ -30,7 +34,7 @@ const SignUp = () => {
   );
 
   const onSubmit = useCallback(
-    (e) => {
+    (e: FormEvent) => {
       e.preventDefault();
       console.log(email, nickname, password, passwordCheck);
       if (!mismatchError && nickname) {
@@ -56,6 +60,14 @@ const SignUp = () => {
     },
     [email, nickname, password, passwordCheck, mismatchError],
   );
+
+  if (data === undefined) {
+    return <div>로딩중...</div>;
+  }
+
+  if (data) {
+    return <Navigate to="/workspace/channel" />;
+  }
 
   return (
     <div id="container">
