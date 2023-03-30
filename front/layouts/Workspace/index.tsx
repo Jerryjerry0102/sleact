@@ -8,7 +8,7 @@ import {
   WorkspaceName,
   Workspaces,
   WorkspaceWrapper,
-} from '@layouts/Workspace/style';
+} from '@layouts/Workspace/styles';
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
 import React, { FC, ReactNode, useCallback } from 'react';
@@ -49,7 +49,7 @@ const Workspace: FC<P> = ({ children }) => {
           <WorkspaceName>Sleact</WorkspaceName>
           <MenuScroll>MenuScroll</MenuScroll>
         </Channels>
-        <Chats>Chats</Chats>
+        <Chats>{children}</Chats>
       </WorkspaceWrapper>
     </div>
   );
